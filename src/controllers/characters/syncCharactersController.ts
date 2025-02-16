@@ -23,6 +23,8 @@ export const syncCharactersController = async () => {
   try {
     const characters = await CharacterRepo.getAll();
 
+    return characters;
+
     const updatedCharacters: Character[] = [];
 
     for (const char of characters) {
