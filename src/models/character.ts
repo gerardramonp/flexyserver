@@ -1,25 +1,25 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-interface Death {
+export interface Death {
   time: string;
   level: number;
   reason: string;
 }
 
-interface LevelProgression {
+export interface LevelProgression {
   level: number;
   date: string;
 }
 
-export interface Character {
+export interface AdaptedCharacter {
   name: string;
   displayname: string;
   level: number;
-  deaths?: Death[];
-  levelProgression?: LevelProgression[];
+  deaths: Death[];
+  levelProgression: LevelProgression[];
 }
 
-interface CharacterModel extends Document, Character {}
+export interface Character extends AdaptedCharacter, Document {}
 
 const deathSchema = new Schema<Death>({
   time: { type: String, required: true },
@@ -36,8 +36,12 @@ const characterSchema = new Schema<Character>({
   name: { type: String, required: true },
   displayname: { type: String, required: true },
   level: { type: Number, required: true },
-  deaths: { type: [deathSchema], required: false },
-  levelProgression: { type: [levelProgressionSchema], required: false },
+  deaths: { type: [deathSchema], required: false, default: [] },
+  levelProgression: {
+    type: [levelProgressionSchema],
+    required: false,
+    default: [],
+  },
 });
 
 const CharacterModel = mongoose.model<Character>("Character", characterSchema);

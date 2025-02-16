@@ -6,8 +6,7 @@ const router = express.Router();
 // Get all characters
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const characters = await Character.find();
-    res.status(200).send(characters);
+    res.status(200).send("not implemented");
   } catch (error) {
     res.status(500).send(error);
   }
