@@ -17,8 +17,8 @@ router.post("/", async (req: Request, res: Response) => {
 
 router.post("/sync", async (req: Request, res: Response) => {
   try {
-    const character = await syncCharactersController();
-    res.status(200).send(character);
+    const response = await syncCharactersController();
+    res.status(200).send(response);
   } catch (error) {
     res.status(500).send(error);
   }
