@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import Character from "../../../models/character";
 import { createCharacterController } from "../../../controllers/characters/createCharacterController";
 import { syncCharactersController } from "../../../controllers/characters/syncCharactersController";
 

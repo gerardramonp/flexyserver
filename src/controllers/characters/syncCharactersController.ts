@@ -3,12 +3,10 @@ import CharacterModel, {
   AdaptedCharacter,
   Character,
   Death,
-  LevelProgression,
 } from "../../models/character";
 import { TibiaAPI } from "../../external/tibiaApi/getCharacter";
 import { LogsRepo } from "../../repositories/logs/logsRepo";
 import { LogType } from "../../models/logs";
-import mongoose from "mongoose";
 
 const getCharacterNewDeaths = (
   char: Character,
