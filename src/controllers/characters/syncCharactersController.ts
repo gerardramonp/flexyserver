@@ -23,10 +23,18 @@ export const syncCharactersController = async () => {
   try {
     const characters = await CharacterRepo.getAll();
 
+    const apiCharacters = await Promise.all(
+      characters.map((char) => TibiaAPI.getCharacter(char.name))
+    );
+
     const updatedCharacters: Character[] = [];
 
     for (const char of characters) {
-      const apiCharacter = await TibiaAPI.getCharacter(char.name);
+      const apiCharacter = apiCharacters.find(
+        (apiChar) => apiChar.name === char.name
+      );
+
+      if (!apiCharacter) continue;
 
       let updated = false;
 
