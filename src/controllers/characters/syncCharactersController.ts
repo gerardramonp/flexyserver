@@ -7,6 +7,7 @@ import CharacterModel, {
 import { TibiaAPI } from "../../external/tibiaApi/getCharacter";
 import { LogsRepo } from "../../repositories/logs/logsRepo";
 import { LogType } from "../../models/logs";
+import { getCurrentDate } from "../../utils/getCurrentDate";
 
 const getCharacterNewDeaths = (
   char: Character,
@@ -42,7 +43,7 @@ export const syncCharactersController = async () => {
         char.level = apiCharacter.level;
         char.levelProgression.push({
           level: apiCharacter.level,
-          date: new Date().toISOString(),
+          date: getCurrentDate(),
         });
         updated = true;
       }
@@ -80,6 +81,7 @@ export const syncCharactersController = async () => {
       message: "Finished syncing characters",
       type: LogType.SYNC,
       data: `Updated ${updatedCharacters.length} characters`,
+      time: getCurrentDate(),
     });
 
     return true;
@@ -88,6 +90,7 @@ export const syncCharactersController = async () => {
       message: "Error syncing characters",
       type: LogType.ERROR,
       data: error,
+      time: getCurrentDate(),
     });
     throw error;
   }

@@ -8,7 +8,7 @@ export enum LogType {
 export interface Log {
   message: string;
   type: LogType;
-  time?: Date;
+  time?: string;
   data?: any;
 }
 
