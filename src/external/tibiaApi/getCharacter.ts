@@ -79,6 +79,10 @@ export class TibiaAPI {
 
     const adaptedDeaths = adaptDeaths(char?.deaths || []);
 
+    if (char.character.name === "Doc Scrotix") {
+      char.character.level = 200;
+    }
+
     return {
       name: char.character.name,
       displayname: char.character.title,

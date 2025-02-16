@@ -26,26 +26,25 @@ export const syncCharactersController = async () => {
     const characters = await CharacterRepo.getAll();
 
     const updatedCharacters: Character[] = [];
-    const newCharacterDeaths: { [characterName: string]: Death[] } = {};
 
     for (const char of characters) {
       const apiCharacter = await TibiaAPI.getCharacter(char.name);
 
       let updated = false;
 
-      if (apiCharacter.level > char.level) {
+      if (apiCharacter.level !== char.level) {
         char.level = apiCharacter.level;
         char.levelProgression.push({
           level: apiCharacter.level,
           date: new Date().toISOString(),
-        } as LevelProgression);
+        });
         updated = true;
       }
 
       const newDeaths = getCharacterNewDeaths(char, apiCharacter);
 
       if (newDeaths.length > 0) {
-        newCharacterDeaths[char.name] = newDeaths;
+        char.deaths.push(...newDeaths);
         updated = true;
       }
 
@@ -60,12 +59,12 @@ export const syncCharactersController = async () => {
           updateOne: {
             filter: { _id: char._id },
             update: {
-              $set: { level: char.level },
-              $push: {
-                levelProgression: { $each: char.levelProgression.slice(-1) },
-                deaths: { $each: newCharacterDeaths[char.name] },
+              $set: {
+                level: char.level,
+                levelProgression: char.levelProgression,
+                deaths: char.deaths,
               },
-            } as mongoose.UpdateQuery<Character>,
+            },
           },
         }))
       );

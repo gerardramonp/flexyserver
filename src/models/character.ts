@@ -21,16 +21,22 @@ export interface AdaptedCharacter {
 
 export interface Character extends AdaptedCharacter, Document {}
 
-const deathSchema = new Schema<Death>({
-  time: { type: String, required: true },
-  level: { type: Number, required: true },
-  reason: { type: String, required: true },
-});
+const deathSchema = new Schema<Death>(
+  {
+    time: { type: String, required: true },
+    level: { type: Number, required: true },
+    reason: { type: String, required: true },
+  },
+  { _id: false }
+);
 
-const levelProgressionSchema = new Schema<LevelProgression>({
-  level: { type: Number, required: true },
-  date: { type: String, required: true },
-});
+const levelProgressionSchema = new Schema<LevelProgression>(
+  {
+    level: { type: Number, required: true },
+    date: { type: String, required: true },
+  },
+  { _id: false }
+);
 
 const characterSchema = new Schema<Character>({
   name: { type: String, required: true },
