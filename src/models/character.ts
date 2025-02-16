@@ -11,13 +11,15 @@ interface LevelProgression {
   date: string;
 }
 
-interface Character extends Document {
+export interface Character {
   name: string;
   displayname: string;
   level: number;
-  deaths: Death[];
-  levelProgression: LevelProgression[];
+  deaths?: Death[];
+  levelProgression?: LevelProgression[];
 }
+
+interface CharacterModel extends Document, Character {}
 
 const deathSchema = new Schema<Death>({
   time: { type: String, required: true },
@@ -34,8 +36,8 @@ const characterSchema = new Schema<Character>({
   name: { type: String, required: true },
   displayname: { type: String, required: true },
   level: { type: Number, required: true },
-  deaths: { type: [deathSchema], required: true },
-  levelProgression: { type: [levelProgressionSchema], required: true },
+  deaths: { type: [deathSchema], required: false },
+  levelProgression: { type: [levelProgressionSchema], required: false },
 });
 
 const CharacterModel = mongoose.model<Character>("Character", characterSchema);

@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import characterRouter from "./routes/character";
+import pubCharacterRoutes from "./routes/characters/public/pubCharacterRoutes";
+import priCharacterRoutes from "./routes/characters/private/priCharacterRoutes";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -23,25 +24,25 @@ const verifyApiKey = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+mongoose.set("strictQuery", false);
+
 // MongoDB connection
-// mongoose
-//   .connect(mongoUri)
-//   .then(() => {
-//     console.log("Connected to MongoDB");
-//   })
-//   .catch((err) => {
-//     console.error("Failed to connect to MongoDB", err);
-//   });
+mongoose
+  .connect(mongoUri)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB", err);
+  });
 
 // Routes
-app.use("/characters", characterRouter);
+app.use("/characters", pubCharacterRoutes);
+
+app.use("/private/characters", verifyApiKey, priCharacterRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Running...");
-});
-
-app.get("/private", verifyApiKey, (req: Request, res: Response) => {
-  res.send("valid key...");
 });
 
 // Start server
