@@ -70,6 +70,12 @@ export const syncCharactersController = async () => {
       );
     }
 
+    await LogsRepo.create({
+      message: "Finished syncing characters",
+      type: LogType.SYNC,
+      data: `Updated ${updatedCharacters.length} characters`,
+    });
+
     return true;
   } catch (error) {
     await LogsRepo.create({

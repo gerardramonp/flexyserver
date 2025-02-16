@@ -21,7 +21,7 @@ router.post("/sync", async (req: Request, res: Response) => {
     const character = await syncCharactersController();
     res.status(200).send(character);
   } catch (error) {
-    res.status;
+    res.status(500).send(error);
   }
 });
 
