@@ -12,7 +12,7 @@ jobs:
     - name: Sync characters with retries
       env:
         ENDPOINT_URL: https://flexyserver.vercel.app/private/characters/sync
-        API_KEY: ${{ secrets.API_PRIVATE_KEY }}
+        API_KEY: ${{ secrets.CHARACTER_SYNC_API_KEY }}
       run: |
         MAX_RETRIES=3
         RETRY_DELAY=10
