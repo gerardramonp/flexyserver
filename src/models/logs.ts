@@ -3,6 +3,7 @@ import { Schema, model, Document } from "mongoose";
 export enum LogType {
   ERROR = "ERROR",
   SYNC = "SYNC",
+  CREATION = "CREATION",
 }
 
 export interface Log {
