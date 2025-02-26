@@ -4,6 +4,7 @@ export enum LogType {
   ERROR = "ERROR",
   SYNC = "SYNC",
   CREATION = "CREATION",
+  LOGIN = "LOGIN",
 }
 
 export interface Log {

@@ -1,12 +1,19 @@
 import { UserRepo } from "../../repositories/users/userRepo";
 import { LogsRepo } from "../../repositories/logs/logsRepo";
 import { LogType } from "../../models/logs";
-import { User } from "../../models/user";
+import { ReturnUser, User } from "../../models/user";
+import bcrypt from "bcrypt";
 
-const createUserController = async (user: User) => {
+const createUserController = async (user: User): Promise<ReturnUser> => {
   try {
     const { email, username, password } = user;
-    const newUser = await UserRepo.create({ email, username, password });
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await UserRepo.create({
+      email,
+      username,
+      password: hashedPassword,
+    });
 
     await LogsRepo.create({
       message: "User created",
@@ -14,7 +21,11 @@ const createUserController = async (user: User) => {
       data: newUser,
     });
 
-    return newUser;
+    return {
+      _id: newUser._id.toString(),
+      email: newUser.email,
+      username: newUser.username,
+    };
   } catch (error) {
     await LogsRepo.create({
       message: "Error creating user",

@@ -8,6 +8,16 @@ export interface User {
   modifiedAt?: Date;
 }
 
+export interface DBUser extends User, Document {
+  _id: string;
+}
+
+export interface ReturnUser {
+  email: string;
+  username: string;
+  _id: string;
+}
+
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true, unique: true },
