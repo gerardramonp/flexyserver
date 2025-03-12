@@ -5,6 +5,7 @@ import priCharacterRoutes from "./routes/characters/private/priCharacterRoutes";
 import dotenv from "dotenv";
 import userRoutes from "./routes/users/userRoutes";
 import authRoutes from "./routes/auth/authRoutes";
+import cors from "cors";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const apiKey = process.env.API_PRIVATE_KEY;
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 const verifyApiKey = (req: Request, res: Response, next: NextFunction) => {
   const key = req.headers["x-api-key"];
