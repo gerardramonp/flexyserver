@@ -8,7 +8,6 @@ router.post("/login", async (req: Request, res: Response) => {
   try {
     const user = req.body;
 
-    console.log("cclog asdad", user);
     if (!user.email || !user.password) {
       return res.status(400).send("Missing required fields");
     }
