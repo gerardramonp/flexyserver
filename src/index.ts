@@ -4,6 +4,7 @@ import pubCharacterRoutes from "./routes/characters/public/pubCharacterRoutes";
 import priCharacterRoutes from "./routes/characters/private/priCharacterRoutes";
 import dotenv from "dotenv";
 import userRoutes from "./routes/users/userRoutes";
+import authRoutes from "./routes/auth/authRoutes";
 
 dotenv.config();
 
@@ -38,11 +39,14 @@ mongoose
   });
 
 // Routes
+
+// Public
 app.use("/characters", pubCharacterRoutes);
+app.use("/auth", authRoutes);
 
+// Private
 app.use("/private/characters", verifyApiKey, priCharacterRoutes);
-
-app.use("/users", verifyApiKey, userRoutes);
+app.use("/private/users", verifyApiKey, userRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Running...");
