@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import pubCharacterRoutes from "./routes/characters/public/pubCharacterRoutes";
 import priCharacterRoutes from "./routes/characters/private/priCharacterRoutes";
 import dotenv from "dotenv";
+import userRoutes from "./routes/users/userRoutes";
 
 dotenv.config();
 
@@ -40,6 +41,8 @@ mongoose
 app.use("/characters", pubCharacterRoutes);
 
 app.use("/private/characters", verifyApiKey, priCharacterRoutes);
+
+app.use("/users", verifyApiKey, userRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Running...");
