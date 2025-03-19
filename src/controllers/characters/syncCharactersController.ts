@@ -25,7 +25,9 @@ export const syncCharactersController = async () => {
     const characters = await CharacterRepo.getAll();
 
     const apiCharacters = await Promise.all(
-      characters.map((char) => TibiaAPI.getCharacter(char.name))
+      characters.map((char) =>
+        TibiaAPI.getCharacter(char.name, char.displayname)
+      )
     );
 
     const updatedCharacters: Character[] = [];

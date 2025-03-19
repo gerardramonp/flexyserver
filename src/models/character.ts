@@ -17,6 +17,8 @@ export interface AdaptedCharacter {
   level: number;
   deaths: Death[];
   levelProgression: LevelProgression[];
+  vocation: string;
+  world: string;
 }
 
 export interface Character extends AdaptedCharacter, Document {}
@@ -48,6 +50,8 @@ const characterSchema = new Schema<Character>({
     required: false,
     default: [],
   },
+  vocation: { type: String, required: true },
+  world: { type: String, required: true },
 });
 
 const CharacterModel = mongoose.model<Character>("Character", characterSchema);

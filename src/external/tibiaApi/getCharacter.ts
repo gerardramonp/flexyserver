@@ -71,7 +71,10 @@ function adaptDeaths(deaths: CharacterDeathResponse[]): Death[] {
 }
 
 export class TibiaAPI {
-  static async getCharacter(name: string): Promise<AdaptedCharacter> {
+  static async getCharacter(
+    name: string,
+    displayname: string
+  ): Promise<AdaptedCharacter> {
     const response = await axios.get(
       `https://api.tibiadata.com/v4/character/${name}`
     );
@@ -86,10 +89,12 @@ export class TibiaAPI {
 
     return {
       name: char.character.name,
-      displayname: char.character.title,
+      displayname: displayname || char.character.name,
       level: char.character.level,
       deaths: adaptedDeaths,
       levelProgression: [],
+      vocation: char.character.vocation,
+      world: char.character.world,
     };
   }
 }
