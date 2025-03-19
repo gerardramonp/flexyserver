@@ -4,6 +4,7 @@ import { createCharacterController } from "../../../controllers/characters/creat
 import { CharacterRepo } from "../../../repositories/characters/characterRepo";
 import { TibiaAPI } from "../../../external/tibiaApi/getCharacter";
 import { ERROR_CHARACTER_NOT_FOUND } from "../../../constants/errors";
+import { Character } from "../../../models/character";
 
 const router = express.Router();
 
@@ -33,7 +34,10 @@ router.post("/", async (req: Request, res: Response) => {
     }
 
     // External api validations
-    const tibiaChar = await TibiaAPI.getCharacter(character.name);
+    const tibiaChar = await TibiaAPI.getCharacter(
+      character.name,
+      character.displayname
+    );
 
     // DB validations
     const existingCharacter = await CharacterRepo.getByName(character.name);
@@ -42,7 +46,9 @@ router.post("/", async (req: Request, res: Response) => {
       return res.status(409).send("Character already exists");
     }
 
-    const createdCharacter = await createCharacterController(character);
+    const createdCharacter = await createCharacterController(
+      tibiaChar as Character
+    );
     res.status(200).send(createdCharacter);
   } catch (error: any) {
     if (error.status === 502) {
