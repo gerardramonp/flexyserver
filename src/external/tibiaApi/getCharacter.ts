@@ -1,5 +1,6 @@
 import axios from "axios";
-import { AdaptedCharacter, Character, Death } from "../../models/character";
+import { AdaptedCharacter, Death } from "../../models/character";
+import { ERROR_CHARACTER_NOT_FOUND } from "../../constants/errors";
 
 export interface CharacterDeathResponse {
   time: string;
@@ -74,6 +75,10 @@ export class TibiaAPI {
     const response = await axios.get(
       `https://api.tibiadata.com/v4/character/${name}`
     );
+
+    if (response.data.information.status.http_code === 502) {
+      throw new Error(ERROR_CHARACTER_NOT_FOUND);
+    }
 
     const char = response.data.character;
 
