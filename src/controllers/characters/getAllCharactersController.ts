@@ -1,9 +1,19 @@
 import { CharacterRepo } from "../../repositories/characters/characterRepo";
 
-export const getAllCharactersController = async () => {
-  const characters = await CharacterRepo.getAll();
+export const getCharactersController = async (characterNames: string[]) => {
+  if (characterNames.length === 0) {
+    return await CharacterRepo.getAll();
+  }
 
-  const filtered = characters.filter((char) => char.name !== "Dejairzin");
+  const foundCharacters = await CharacterRepo.getByNames(characterNames);
 
-  return filtered;
+  if (foundCharacters.length !== characterNames.length) {
+    const missingChars = characterNames.filter(
+      (char) => !foundCharacters.find((c) => c.name === char)
+    );
+
+    throw new Error(`Characters not found: ${missingChars.join(", ")}`);
+  }
+
+  return foundCharacters;
 };

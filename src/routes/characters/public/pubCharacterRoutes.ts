@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { getAllCharactersController } from "../../../controllers/characters/getAllCharactersController";
+import { getCharactersController } from "../../../controllers/characters/getAllCharactersController";
 import { createCharacterController } from "../../../controllers/characters/createCharacterController";
 import { CharacterRepo } from "../../../repositories/characters/characterRepo";
 import { TibiaAPI } from "../../../external/tibiaApi/getCharacter";
@@ -11,10 +11,18 @@ const router = express.Router();
 // Get all characters
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const characters = await getAllCharactersController();
-    res.status(200).json(characters);
-  } catch (error) {
-    res.status(500).send(error);
+    const characters = req.query.characters;
+
+    let characterNames: string[] = [];
+
+    if (typeof characters === "string") {
+      characterNames = decodeURIComponent(characters).split(",");
+    }
+
+    const foundChars = await getCharactersController(characterNames);
+    res.status(200).json(foundChars);
+  } catch (error: any) {
+    res.status(500).send(error.message);
   }
 });
 

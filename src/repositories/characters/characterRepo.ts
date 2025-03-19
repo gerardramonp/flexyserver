@@ -11,6 +11,11 @@ export class CharacterRepo {
     return character;
   }
 
+  static async getByNames(names: string[]): Promise<Character[]> {
+    const characters = await CharacterModel.find().where("name").in(names);
+    return characters;
+  }
+
   static async create(charData: Character): Promise<Character> {
     const characters = await CharacterModel.create(charData);
     return characters;
