@@ -63,10 +63,16 @@ router.post("/", async (req: Request, res: Response) => {
     res.status(200).send(createdCharacter);
   } catch (error: any) {
     if (error.status === 502) {
-      return res.status(404).send(ERROR_CHARACTER_NOT_FOUND);
+      return res.status(404).json({
+        success: false,
+        message: ERROR_CHARACTER_NOT_FOUND,
+      });
     }
 
-    return res.status(500).send(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 });
 
