@@ -14,7 +14,9 @@ export class CharacterRepo {
   }
 
   static async getByNames(names: string[]): Promise<Character[]> {
-    const characters = await CharacterModel.find().where("name").in(names);
+    const characters = await CharacterModel.find()
+      .where("name")
+      .in(names.map((name) => new RegExp(`^${name}$`, "i")));
     return characters;
   }
 
