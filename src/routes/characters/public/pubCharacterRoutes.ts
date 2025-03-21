@@ -54,7 +54,7 @@ router.post("/", async (req: Request, res: Response) => {
     const existingCharacter = await CharacterRepo.getByName(character.name);
 
     if (existingCharacter) {
-      return res.status(409).send("Character already exists");
+      throw new Error("Character already exists");
     }
 
     const createdCharacter = await createCharacterController(

@@ -7,7 +7,9 @@ export class CharacterRepo {
   }
 
   static async getByName(name: string): Promise<Character | null> {
-    const character = await CharacterModel.findOne().where("name").equals(name);
+    const character = await CharacterModel.findOne()
+      .where("name")
+      .regex(new RegExp(`^${name}$`, "i"));
     return character;
   }
 
