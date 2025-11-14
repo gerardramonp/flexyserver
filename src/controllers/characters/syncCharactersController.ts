@@ -24,18 +24,34 @@ export const syncCharactersController = async () => {
   try {
     const characters = await CharacterRepo.getAll();
 
-    const apiCharacters = await Promise.all(
-      characters.map((char) =>
-        TibiaAPI.getCharacter(char.name, char.displayname)
-      )
-    );
+    // Batched parallel fetching with limited concurrency
+    const batchSize = 20;
+    const fetchErrors: string[] = [];
+    const apiCharactersMap = new Map<string, AdaptedCharacter>();
+
+    for (let i = 0; i < characters.length; i += batchSize) {
+      const batch = characters.slice(i, i + batchSize);
+      const results = await Promise.all(
+        batch.map((char) =>
+          TibiaAPI.getCharacter(char.name, char.displayname)
+            .then((data) => ({ ok: true, data, name: char.name }))
+            .catch((err) => ({ ok: false, error: err, name: char.name }))
+        )
+      );
+      results.forEach((r) => {
+        if (r.ok && "data" in r) {
+          apiCharactersMap.set(r.data.name, r.data);
+        } else if (!r.ok && "error" in r) {
+          const errObj: any = (r as any).error;
+          fetchErrors.push(`${r.name}: ${errObj?.message || errObj}`);
+        }
+      });
+    }
 
     const updatedCharacters: Character[] = [];
 
     for (const char of characters) {
-      const apiCharacter = apiCharacters.find(
-        (apiChar) => apiChar.name === char.name
-      );
+      const apiCharacter = apiCharactersMap.get(char.name);
 
       if (!apiCharacter) continue;
 
@@ -82,7 +98,11 @@ export const syncCharactersController = async () => {
     await LogsRepo.create({
       message: "Finished syncing characters",
       type: LogType.SYNC,
-      data: `Updated ${updatedCharacters.length} characters`,
+      data: {
+        updatedCount: updatedCharacters.length,
+        total: characters.length,
+        fetchErrors,
+      },
       time: getCurrentDate(),
     });
 
